@@ -10,7 +10,12 @@ export const todoReducer = (state: TodoState, action: TodoAction): TodoState => 
       return {
         todos: [
           ...state.todos,
-          { id: Date.now(), text: action.payload, completed: false },
+          { 
+            id: Date.now(), 
+            text: action.payload.text, 
+            completed: false, 
+            createdAt: action.payload.createdAt || Date.now() 
+          },
         ],
       };
     case 'TOGGLE_TODO':

@@ -11,14 +11,23 @@ function App() {
   const [input, setInput] = useState('');
   const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState('');
+  
+  // Sort state persistence
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(() => {
+    return (localStorage.getItem('sentinel-todo-sort') as 'asc' | 'desc') || 'desc';
+  });
 
   useEffect(() => {
     saveState(state);
   }, [state]);
 
+  useEffect(() => {
+    localStorage.setItem('sentinel-todo-sort', sortOrder);
+  }, [sortOrder]);
+
   const addTodo = () => {
     if (input.trim()) {
-      dispatch({ type: 'ADD_TODO', payload: input });
+      dispatch({ type: 'ADD_TODO', payload: { text: input, createdAt: Date.now() } });
       setInput('');
     }
   };
@@ -49,6 +58,16 @@ function App() {
     setEditingText('');
   };
 
+  const toggleSort = () => {
+    setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'));
+  };
+
+  const sortedTodos = [...state.todos].sort((a, b) => {
+    const timeA = a.createdAt || a.id;
+    const timeB = b.createdAt || b.id;
+    return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
+  });
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
       <h1 className="text-5xl font-bold text-gray-800 mb-8">Todo Professional Edition</h1>
@@ -69,8 +88,20 @@ function App() {
             Add Todo
           </button>
         </div>
+        
+        <div className="flex justify-between items-center mb-4 text-sm text-gray-600">
+          <span>{state.todos.length} items</span>
+          <button 
+            onClick={toggleSort}
+            className="flex items-center hover:text-blue-600 focus:outline-none"
+            aria-label={`Sort by date ${sortOrder === 'desc' ? 'Ascending' : 'Descending'}`}
+          >
+            Sort: {sortOrder === 'desc' ? 'Newest First ▼' : 'Oldest First ▲'}
+          </button>
+        </div>
+
         <ul>
-          {state.todos.map((todo) => (
+          {sortedTodos.map((todo) => (
             <li
               key={todo.id}
               className="flex items-center justify-between p-3 border-b border-gray-200 last:border-b-0"

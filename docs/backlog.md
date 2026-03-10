@@ -25,3 +25,11 @@
 ## TASK-006: CI/CD & Deployment (PM)
 - **Priority:** P0
 - **Details:** Set up GitHub Actions for automated build/deploy to `gh-pages`. Ensure Bundle Size < 150KB.
+## TASK-008: Implement Task Sorting by Date (DEV)
+- **Priority:** Medium
+- **Details:** 
+  - Extend Todo object to include `createdAt` timestamp (already exists in current impl).
+  - Implement sorting logic (Ascending/Descending).
+  - Add a "Sort" dropdown/toggle UI component in Tailwind.
+  - Persist sort preference to `localStorage`.
+  - Update `docs/technical_design.md`.
