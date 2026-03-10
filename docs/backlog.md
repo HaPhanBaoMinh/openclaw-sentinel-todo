@@ -33,3 +33,11 @@
   - Add a "Sort" dropdown/toggle UI component in Tailwind.
   - Persist sort preference to `localStorage`.
   - Update `docs/technical_design.md`.
+
+## TASK-009: Implement Task Search Functionality (DEV)
+- **Priority:** Medium
+- **Details:** 
+  - Implement a text search input field above the task list.
+  - Filter tasks dynamically based on text property.
+  - Display "No matches found" when result is empty.
+  - Use memoized filter for performance.

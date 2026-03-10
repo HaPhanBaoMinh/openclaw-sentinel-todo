@@ -112,4 +112,36 @@ describe('App', () => {
     // Restore Date.now
     vi.restoreAllMocks();
   });
+
+  it('filters tasks based on search query (TC-009)', () => {
+    render(<App />);
+    const inputElement = screen.getByPlaceholderText(/Add a new todo/i);
+    const addButton = screen.getByRole('button', { name: /Add Todo/i });
+    const searchInput = screen.getByPlaceholderText(/Search tasks.../i);
+
+    fireEvent.change(inputElement, { target: { value: 'Buy groceries' } });
+    fireEvent.click(addButton);
+
+    fireEvent.change(inputElement, { target: { value: 'Learn Vitest' } });
+    fireEvent.click(addButton);
+
+    // Initial state: both visible
+    expect(screen.getByText(/Buy groceries/i)).toBeInTheDocument();
+    expect(screen.getByText(/Learn Vitest/i)).toBeInTheDocument();
+
+    // Search for 'Vitest'
+    fireEvent.change(searchInput, { target: { value: 'Vitest' } });
+    expect(screen.getByText(/Learn Vitest/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Buy groceries/i)).not.toBeInTheDocument();
+
+    // Search for non-existent task
+    fireEvent.change(searchInput, { target: { value: 'Non-existent task' } });
+    expect(screen.getByText(/No matches found/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Learn Vitest/i)).not.toBeInTheDocument();
+
+    // Clear search
+    fireEvent.change(searchInput, { target: { value: '' } });
+    expect(screen.getByText(/Buy groceries/i)).toBeInTheDocument();
+    expect(screen.getByText(/Learn Vitest/i)).toBeInTheDocument();
+  });
 });
