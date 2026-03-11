@@ -6,6 +6,7 @@ export interface Todo {
   completed: boolean;
   createdAt: number;
   priority: Priority;
+  deadline?: string;
 }
 
 export interface TodoState {
@@ -13,7 +14,7 @@ export interface TodoState {
 }
 
 export type TodoAction =
-  | { type: 'ADD_TODO'; payload: { text: string; createdAt: number; priority: Priority } }
+  | { type: 'ADD_TODO'; payload: { text: string; createdAt: number; priority: Priority; deadline?: string } }
   | { type: 'TOGGLE_TODO'; payload: number }
   | { type: 'DELETE_TODO'; payload: number }
   | { type: 'EDIT_TODO'; payload: { id: number; newText: string } };

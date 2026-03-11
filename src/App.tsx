@@ -9,6 +9,7 @@ function App() {
     return persistedState ? persistedState : init;
   });
   const [input, setInput] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
   const [searchQuery, setSearchQuery] = useState('');
   const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
@@ -29,9 +30,18 @@ function App() {
 
   const addTodo = () => {
     if (input.trim()) {
-      dispatch({ type: 'ADD_TODO', payload: { text: input, createdAt: Date.now(), priority } });
+      dispatch({ 
+        type: 'ADD_TODO', 
+        payload: { 
+          text: input, 
+          createdAt: Date.now(), 
+          priority,
+          deadline: deadline || undefined
+        } 
+      });
       setInput('');
       setPriority('medium');
+      setDeadline('');
     }
   };
 
@@ -107,6 +117,12 @@ function App() {
             onKeyPress={(e) => e.key === 'Enter' && addTodo()}
             placeholder="Add a new todo"
           />
+          <input
+            type="date"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            className="p-2 border-y border-r border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand text-sm text-gray-600"
+          />
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
@@ -176,14 +192,21 @@ function App() {
                         className="mr-3 h-5 w-5 text-brand rounded focus:ring-brand cursor-pointer transition-micro"
                       />
                       <span className={`w-2 h-2 rounded-full mr-3 ${todo.priority === 'high' ? 'bg-rose-500' : todo.priority === 'medium' ? 'bg-amber-500' : 'bg-slate-500'}`} title={`Priority: ${todo.priority}`} />
-                      <span
-                        className={`text-lg cursor-pointer transition-micro ${
-                          todo.completed ? 'line-through text-gray-400' : 'text-gray-800'
-                        }`}
-                        onClick={() => toggleTodo(todo.id)}
-                      >
-                        {todo.text}
-                      </span>
+                      <div className="flex flex-col">
+                        <span
+                          className={`text-lg cursor-pointer transition-micro ${
+                            todo.completed ? 'line-through text-gray-400' : 'text-gray-800'
+                          }`}
+                          onClick={() => toggleTodo(todo.id)}
+                        >
+                          {todo.text}
+                        </span>
+                        {todo.deadline && (
+                          <span className={`text-xs mt-0.5 ${new Date(todo.deadline).getTime() < Date.now() && !todo.completed ? 'text-rose-500 font-semibold' : 'text-slate-500'}`}>
+                            {new Date(todo.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-micro">
                       <button

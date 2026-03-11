@@ -50,3 +50,12 @@
   - Update the `Todo` type/interface to include the `priority` field.
   - Ensure priority data is persisted in `localStorage`.
   - Maintain the "Minimalist Detail" aesthetic using Tailwind CSS.
+
+## TASK-011: Implement Task Deadlines (Due Dates) (DEV)
+- **Priority:** Medium
+- **Details:**
+  - Add HTML5 date input (`<input type="date">`) to the task creation form.
+  - Update `Todo` type to include optional `deadline` field.
+  - Display deadline on task item (e.g., "Mar 15, 2026").
+  - Muted text color for future dates, warning color (`text-rose-500`) for past deadlines.
+  - Persist deadline to `localStorage`.
