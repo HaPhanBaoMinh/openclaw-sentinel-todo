@@ -9,6 +9,7 @@ function App() {
     return persistedState ? persistedState : init;
   });
   const [input, setInput] = useState('');
+  const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
   const [searchQuery, setSearchQuery] = useState('');
   const [editingTodoId, setEditingTodoId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState('');
@@ -28,8 +29,9 @@ function App() {
 
   const addTodo = () => {
     if (input.trim()) {
-      dispatch({ type: 'ADD_TODO', payload: { text: input, createdAt: Date.now() } });
+      dispatch({ type: 'ADD_TODO', payload: { text: input, createdAt: Date.now(), priority } });
       setInput('');
+      setPriority('medium');
     }
   };
 
@@ -105,6 +107,15 @@ function App() {
             onKeyPress={(e) => e.key === 'Enter' && addTodo()}
             placeholder="Add a new todo"
           />
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
+            className="p-2 border-y border-r border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand text-sm"
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
           <button
             onClick={addTodo}
             className="px-4 py-2 bg-brand text-white font-semibold rounded-r-md hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-brand"
@@ -164,6 +175,7 @@ function App() {
                         onChange={() => toggleTodo(todo.id)}
                         className="mr-3 h-5 w-5 text-brand rounded focus:ring-brand cursor-pointer transition-micro"
                       />
+                      <span className={`w-2 h-2 rounded-full mr-3 ${todo.priority === 'high' ? 'bg-rose-500' : todo.priority === 'medium' ? 'bg-amber-500' : 'bg-slate-500'}`} title={`Priority: ${todo.priority}`} />
                       <span
                         className={`text-lg cursor-pointer transition-micro ${
                           todo.completed ? 'line-through text-gray-400' : 'text-gray-800'

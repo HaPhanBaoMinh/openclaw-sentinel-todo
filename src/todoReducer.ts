@@ -14,7 +14,8 @@ export const todoReducer = (state: TodoState, action: TodoAction): TodoState => 
             id: Date.now(), 
             text: action.payload.text, 
             completed: false, 
-            createdAt: action.payload.createdAt || Date.now() 
+            createdAt: action.payload.createdAt || Date.now(),
+            priority: action.payload.priority
           },
         ],
       };

@@ -144,4 +144,30 @@ describe('App', () => {
     expect(screen.getByText(/Buy groceries/i)).toBeInTheDocument();
     expect(screen.getByText(/Learn Vitest/i)).toBeInTheDocument();
   });
+
+  it('supports task priorities (TC-010)', () => {
+    render(<App />);
+    const inputElement = screen.getByPlaceholderText(/Add a new todo/i);
+    const addButton = screen.getByRole('button', { name: /Add Todo/i });
+    const prioritySelect = screen.getByRole('combobox');
+
+    // Add high priority task
+    fireEvent.change(inputElement, { target: { value: 'High Priority Task' } });
+    fireEvent.change(prioritySelect, { target: { value: 'high' } });
+    fireEvent.click(addButton);
+
+    // Verify it added
+    expect(screen.getByText(/High Priority Task/i)).toBeInTheDocument();
+    
+    // Add low priority task
+    fireEvent.change(inputElement, { target: { value: 'Low Priority Task' } });
+    fireEvent.change(prioritySelect, { target: { value: 'low' } });
+    fireEvent.click(addButton);
+
+    expect(screen.getByText(/Low Priority Task/i)).toBeInTheDocument();
+    
+    // We can test the title attribute of the priority indicator element
+    expect(screen.getByTitle('Priority: high')).toBeInTheDocument();
+    expect(screen.getByTitle('Priority: low')).toBeInTheDocument();
+  });
 });

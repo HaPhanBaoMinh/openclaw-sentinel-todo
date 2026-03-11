@@ -41,3 +41,12 @@
   - Filter tasks dynamically based on text property.
   - Display "No matches found" when result is empty.
   - Use memoized filter for performance.
+
+## TASK-010: Implement Task Priority System (DEV)
+- **Priority:** Medium
+- **Details:**
+  - Add a priority selector (Low, Medium, High) to the task creation input.
+  - Display a subtle color-coded indicator on each task based on priority level.
+  - Update the `Todo` type/interface to include the `priority` field.
+  - Ensure priority data is persisted in `localStorage`.
+  - Maintain the "Minimalist Detail" aesthetic using Tailwind CSS.
